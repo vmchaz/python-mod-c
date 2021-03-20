@@ -1,18 +1,19 @@
 //#include "test.h"
 #include <Python.h>
-#include "field.h"
+#include "unitvarstruct.h"
 
 // Создание структуры
-static PyObject * Field_new(PyTypeObject *type, PyObject *args, PyObject *kwds) 
+static PyObject * UnitVarStruct_new(PyTypeObject *type, PyObject *args, PyObject *kwds) 
 {
-    Field *self;
+    UnitVarStruct *self;
 
-    self = (Field *)type->tp_alloc(type, 0);
+    self = (UnitVarStruct *)type->tp_alloc(type, 0);
     if (self != NULL) {
-        self->width = 0;
-        self->height = 0;
-        self->size = 0;
-        memset(&self->cells, 0, sizeof(self->cells));
+        self->id = 0;
+        self->energy = 0;
+        self->x = 0;
+        self->y = 0;
+        self->direction = 0;
     }
 
     return (PyObject *)self;
@@ -20,54 +21,62 @@ static PyObject * Field_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
 
 // Освобождение структуры
-static void Field_dealloc(Field * self) 
+static void UnitVarStruct_dealloc(UnitVarStruct * self) 
 {
     Py_TYPE(self)->tp_free((PyObject*)self);
 }
 
 
 // Инициализация структуры, заполняем её переданными значениями
-static int Field_init(Field *self, PyObject *args, PyObject *kwds) {
+static int UnitVarStruct_init(UnitVarStruct *self, PyObject *args, PyObject *kwds) {
     //static char *kwlist[] = {"val1", "val2", "val3", NULL};
-    static char *kwlist[] = {"width", "height", NULL};
+    static char *kwlist[] = {"id", "energy", "x", "y", "direction", NULL};
     
-    int width, height;
+    int id;
+    int energy;
+    int x;
+    int y;
+    int direction;
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "ii", kwlist, &width, &height))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "iiiii", kwlist, &id, &energy, &x, &y, &direction))
         return -1;
         
-    self->width = width;
-    self->height = height;
-    self->size = width*height;
+    self->id = id;
+    self->x = x;
+    self->y = y;
+    self->energy = energy;
+    self->direction = direction;
 
     return 0;
 }
 
 
 // Описываем аттрибуты из которых состоит структура
-static PyMemberDef Field_members[] = 
+static PyMemberDef UnitVarStruct_members[] = 
 {
-    {"width", T_INT, offsetof(Field, width), 0, "int"},
-    {"height", T_INT, offsetof(Field, height), 0, "int"},
-    {"size", T_INT, offsetof(Field, size), 0, "int"},
+    {"id", T_INT, offsetof(UnitVarStruct, id), 0, "int"},
+    {"energy", T_INT, offsetof(UnitVarStruct, energy), 0, "int"},
+    {"x", T_INT, offsetof(UnitVarStruct, x), 0, "int"},
+    {"y", T_INT, offsetof(UnitVarStruct, y), 0, "int"},
+    {"direction", T_INT, offsetof(UnitVarStruct, direction), 0, "int"},
     {NULL}
 };
 
 
 // Описание методов стрктуры, но у классической структуры не может быть методов!
-static PyMethodDef Field_methods[] = 
+static PyMethodDef UnitVarStruct_methods[] = 
 {
     {NULL}  /* Sentinel */
 };
 
 
 // Структура описывающая нашу структуру. Какие атрибуты, методы, конструкторы, деструкторы и т.д. и т.п.
-PyTypeObject Field_Type = {
+PyTypeObject UnitVarStruct_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
-    "testmod.Field",                  /* tp_name */
-    sizeof(Field),                    /* tp_basicsize */
+    "testmod.UnitVarStruct",                  /* tp_name */
+    sizeof(UnitVarStruct),                    /* tp_basicsize */
     0,                                  /* tp_itemsize */
-    (destructor) Field_dealloc,       /* tp_dealloc */
+    (destructor) UnitVarStruct_dealloc,       /* tp_dealloc */
     0,                                  /* tp_print */
     0,                                  /* tp_getattr */
     0,                                  /* tp_setattr */
@@ -83,22 +92,22 @@ PyTypeObject Field_Type = {
     0,                         /* tp_setattro */
     0,                         /* tp_as_buffer */
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,   /* tp_flags */
-    "Field objects",         /* tp_doc */
+    "UnitVarStruct objects",         /* tp_doc */
     0,                         /* tp_traverse */
     0,                         /* tp_clear */
     0,                         /* tp_richcompare */
     0,                         /* tp_weaklistoffset */
     0,                         /* tp_iter */
     0,                         /* tp_iternext */
-    Field_methods,           /* tp_methods */
-    Field_members,           /* tp_members */
+    UnitVarStruct_methods,           /* tp_methods */
+    UnitVarStruct_members,           /* tp_members */
     0,                         /* tp_getset */
     0,                         /* tp_base */
     0,                         /* tp_dict */
     0,                         /* tp_descr_get */
     0,                         /* tp_descr_set */
     0,                         /* tp_dictoffset */
-    (initproc) Field_init,   /* tp_init */
+    (initproc) UnitVarStruct_init,   /* tp_init */
     0,                         /* tp_alloc */
-    Field_new,               /* tp_new */
+    UnitVarStruct_new,               /* tp_new */
 };

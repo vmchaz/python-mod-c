@@ -92,3 +92,21 @@ PyObject * testmod_func_get_register(PyObject *self, PyObject *args)
     
     Py_BuildValue("i", val);
 }
+
+
+
+PyObject * testmod_vcpu_step(PyObject *self, PyObject *args) 
+{
+    VCPU * vcpu;
+    Field * field;
+    UnitVarStruct * u;
+    int maxsteps;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "OOOi", &vcpu, &field, &u, &nsteps)) // O - объект данных
+        Py_RETURN_NONE;
+    
+    val = st->registers[idx];
+    
+    Py_BuildValue("i", val);
+}

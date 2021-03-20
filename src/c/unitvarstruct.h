@@ -1,5 +1,5 @@
-#ifndef _FIELD_H_
-#define _FIELD_H_
+#ifndef _UNITVARSTRUCT_H_
+#define _UNITVARSTRUCT_H_
 
 #include <Python.h>
     
@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-extern PyTypeObject Field_Type;
+extern PyTypeObject UnitVarStruct_Type;
 
 #ifdef	__cplusplus
 }
@@ -23,21 +23,15 @@ extern PyTypeObject Field_Type;
 #define MaxFieldWidth 10
 #define MaxFieldHeight 10
 
-typedef struct FieldCell_s FieldCell;
+typedef struct UnitVarStruct_s UnitVarStruct;
 
-struct FieldCell_s {
-    int type;
-    void * obj;
-};
-
-typedef struct Field_s Field;
-
-struct Field_s {
+struct UnitVarStruct_s {
     PyObject_HEAD // Макрос объявления нового типа, объекта фиксированного размера
-    int width;
-    int height;
-    int size;
-    FieldCell cells[100];
+    int id;
+    int energy;
+    int x;
+    int y;
+    int direction;
 };
 
 #endif

@@ -9,6 +9,7 @@
 
 #include "vcpu.h"
 #include "field.h"
+#include "unitvarstruct.h"
 
 #include "basic_func.h"
 #include "advanced_func.h"
@@ -36,7 +37,8 @@ static struct PyModuleDef module = {
 };
 
 // Инициализация модуля
-PyMODINIT_FUNC PyInit_testmod(void) {
+PyMODINIT_FUNC PyInit_testmod(void) 
+{
     PyObject *mod = PyModule_Create(&module);
 
     // Добавляем глобальные переменные
@@ -47,18 +49,27 @@ PyMODINIT_FUNC PyInit_testmod(void) {
 
     // Добавляем структуру
     
+    
     // Завершение инициализации структуры
     if (PyType_Ready(&DemoRec_Type) < 0)
         return NULL;
     if (PyType_Ready(&VCPU_Type) < 0)
         return NULL;        
+    if (PyType_Ready(&Field_Type) < 0)
+        return NULL;
+    if (PyType_Ready(&UnitVarStruct_Type) < 0)
+        return NULL;
+
     
     Py_INCREF(&DemoRec_Type);
     Py_INCREF(&VCPU_Type);
+    Py_INCREF(&Field_Type);
+    Py_INCREF(&UnitVarStruct_Type);
     
     PyModule_AddObject(mod, "DemoRec", (PyObject *) &DemoRec_Type);
     PyModule_AddObject(mod, "VCPU", (PyObject *) &VCPU_Type);
-    //PyModule_AddObject(mod, "Field", (PyObject *) &Field_Type);
+    PyModule_AddObject(mod, "Field", (PyObject *) &Field_Type);
+    PyModule_AddObject(mod, "UnitVarStruct", (PyObject *) &UnitVarStruct_Type);
     
     return mod;
 }

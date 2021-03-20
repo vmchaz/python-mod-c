@@ -17,6 +17,7 @@ OBJS = $(BUILD)/test.o \
 	$(BUILD)/demorec.o \
 	$(BUILD)/vcpu.o \
 	$(BUILD)/field.o \
+	$(BUILD)/unitvarstruct.o \
 	$(BUILD)/basic_func.o \
 	$(BUILD)/advanced_func.o
 
@@ -47,6 +48,10 @@ $(BUILD)/vcpu.o: $(DEPS) \
 $(BUILD)/field.o: $(DEPS) \
 	$(SRC)/field.c
 	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/field.o $(SRC)/field.c
+	
+$(BUILD)/unitvarstruct.o: $(DEPS) \
+	$(SRC)/unitvarstruct.c
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/unitvarstruct.o $(SRC)/unitvarstruct.c
 	
 $(BUILD)/basic_func.o: $(DEPS) \
 	$(SRC)/basic_func.c
