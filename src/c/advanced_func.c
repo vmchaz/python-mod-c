@@ -1,7 +1,12 @@
 //#include "test.h"
 #include <Python.h>
-#include "vcpu.h"
 #include "demorec.h"
+#include "vcpu.h"
+#include "field.h"
+#include "unitvarstruct.h"
+#include "instructionsequence.h"
+
+#include "cpu.h"
 
 
 //==========================================================================
@@ -98,15 +103,15 @@ PyObject * testmod_func_get_register(PyObject *self, PyObject *args)
 PyObject * testmod_vcpu_step(PyObject *self, PyObject *args) 
 {
     VCPU * vcpu;
+    InstructionSequence * sequence;
     Field * field;
     UnitVarStruct * u;
     int maxsteps;
     
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "OOOi", &vcpu, &field, &u, &nsteps)) // O - объект данных
+    if (!PyArg_ParseTuple(args, "OOOOi", &vcpu, &sequence, &field, &u, &maxsteps)) // O - объект данных
         Py_RETURN_NONE;
+        
+    int res = vcpu_step(vcpu, sequence, field, u, maxsteps);
     
-    val = st->registers[idx];
-    
-    Py_BuildValue("i", val);
+    Py_BuildValue("i", res);
 }

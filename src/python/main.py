@@ -82,17 +82,13 @@ for i in range(20):
 print(l)
 
 vcpu = testmod.VCPU(1)
-
 u = testmod.UnitVarStruct(1, 1000, 0, 0, 0)
+s = testmod.InstructionSequence(0)
+f = testmod.Field(5, 5)
 print(dir(vcpu))
-for i in range(16):
-    testmod.set_register(vcpu, i, i+20)
-    
-for i in range(16):
-    print(testmod.get_register(vcpu, i))
-    
+print(dir(s))
+print(dir(f))
 print(dir(u))
-
 
 # Вызывай метод print нашей структуры, только по скольку C частично ООП
 # То нужно в этод метод передать указатель на нашу структуру

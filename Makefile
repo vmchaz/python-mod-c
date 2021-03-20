@@ -14,10 +14,12 @@ INCS = -I$(SRC)
 DEPS = $(SRC)/test.h 
 
 OBJS = $(BUILD)/test.o \
+    $(BUILD)/cpu.o \
 	$(BUILD)/demorec.o \
 	$(BUILD)/vcpu.o \
 	$(BUILD)/field.o \
 	$(BUILD)/unitvarstruct.o \
+	$(BUILD)/instructionsequence.o \
 	$(BUILD)/basic_func.o \
 	$(BUILD)/advanced_func.o
 
@@ -36,6 +38,10 @@ $(BUILD)/testmod.so: \
 $(BUILD)/test.o: $(DEPS) \
 	$(SRC)/test.c
 	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/test.o $(SRC)/test.c
+	
+$(BUILD)/cpu.o: $(DEPS) \
+	$(SRC)/cpu.c
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/cpu.o $(SRC)/cpu.c
 
 $(BUILD)/demorec.o: $(DEPS) \
 	$(SRC)/demorec.c
@@ -52,6 +58,10 @@ $(BUILD)/field.o: $(DEPS) \
 $(BUILD)/unitvarstruct.o: $(DEPS) \
 	$(SRC)/unitvarstruct.c
 	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/unitvarstruct.o $(SRC)/unitvarstruct.c
+	
+$(BUILD)/instructionsequence.o: $(DEPS) \
+	$(SRC)/instructionsequence.c
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/instructionsequence.o $(SRC)/instructionsequence.c
 	
 $(BUILD)/basic_func.o: $(DEPS) \
 	$(SRC)/basic_func.c

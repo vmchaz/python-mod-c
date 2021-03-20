@@ -8,6 +8,7 @@
 #include "demorec.h"
 
 #include "vcpu.h"
+#include "instructionsequence.h"
 #include "field.h"
 #include "unitvarstruct.h"
 
@@ -27,6 +28,7 @@ static PyMethodDef methods[] = {
     {"func_set_element", testmod_func_set_element, METH_VARARGS, "func_set_element"},
     {"get_register", testmod_func_get_register, METH_VARARGS, "get_register"},
     {"set_register", testmod_func_set_register, METH_VARARGS, "set_register"},
+    {"vcpu_step", testmod_vcpu_step, METH_VARARGS, "vcpu_step"},
     
     {NULL, NULL, 0, NULL}
 };
@@ -37,7 +39,7 @@ static struct PyModuleDef module = {
 };
 
 // Инициализация модуля
-PyMODINIT_FUNC PyInit_testmod(void) 
+PyMODINIT_FUNC PyInit_testmod(void)
 {
     PyObject *mod = PyModule_Create(&module);
 
@@ -54,7 +56,9 @@ PyMODINIT_FUNC PyInit_testmod(void)
     if (PyType_Ready(&DemoRec_Type) < 0)
         return NULL;
     if (PyType_Ready(&VCPU_Type) < 0)
-        return NULL;        
+        return NULL;
+    if (PyType_Ready(&InstructionSequence_Type) < 0)
+        return NULL;
     if (PyType_Ready(&Field_Type) < 0)
         return NULL;
     if (PyType_Ready(&UnitVarStruct_Type) < 0)
@@ -63,11 +67,13 @@ PyMODINIT_FUNC PyInit_testmod(void)
     
     Py_INCREF(&DemoRec_Type);
     Py_INCREF(&VCPU_Type);
+    Py_INCREF(&InstructionSequence_Type);
     Py_INCREF(&Field_Type);
     Py_INCREF(&UnitVarStruct_Type);
     
     PyModule_AddObject(mod, "DemoRec", (PyObject *) &DemoRec_Type);
     PyModule_AddObject(mod, "VCPU", (PyObject *) &VCPU_Type);
+    PyModule_AddObject(mod, "InstructionSequence", (PyObject *) &InstructionSequence_Type);
     PyModule_AddObject(mod, "Field", (PyObject *) &Field_Type);
     PyModule_AddObject(mod, "UnitVarStruct", (PyObject *) &UnitVarStruct_Type);
     
