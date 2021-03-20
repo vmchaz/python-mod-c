@@ -6,7 +6,7 @@
 #include "basic_func.h"
 
 
-static PyObject * func_hello(PyObject *self, PyObject *args) 
+PyObject * testmod_func_hello(PyObject *self, PyObject *args) 
 { // Можно без args, но будет warning при компиляции.
     puts("Hello!");
     Py_RETURN_NONE;
@@ -16,7 +16,7 @@ static PyObject * func_hello(PyObject *self, PyObject *args)
 /**
  * Получение значения переменной содержащей значение типа int и возврат его.
  */
-static PyObject * func_ret_int(PyObject *self, PyObject *args) 
+PyObject * testmod_func_ret_int(PyObject *self, PyObject *args) 
 {
     int val;
 
@@ -45,7 +45,7 @@ static PyObject * func_ret_int(PyObject *self, PyObject *args)
 /**
  * Получение значения переменной содержащей значение типа double и возврат его.
  */
-static PyObject * func_ret_double(PyObject *self, PyObject *args) {
+PyObject * testmod_func_ret_double(PyObject *self, PyObject *args) {
     double val;
 
     if (PyTuple_Size(args) != 1) {
@@ -61,7 +61,7 @@ static PyObject * func_ret_double(PyObject *self, PyObject *args) {
 /**
  * Получение string и возврат его.
  */
-static PyObject * func_ret_str(PyObject *self, PyObject *args) {
+PyObject * testmod_func_ret_str(PyObject *self, PyObject *args) {
     char *val;
 
     if (PyTuple_Size(args) != 1) {
@@ -84,7 +84,7 @@ static PyObject * func_ret_str(PyObject *self, PyObject *args) {
 /**
  * Получение значения переменных содержащих значения типа int, double, char *.
  */
-static PyObject * func_many_args(PyObject *self, PyObject *args) {
+PyObject * testmod_func_many_args(PyObject *self, PyObject *args) {
     int val1;
     double val2;
     char *val3;

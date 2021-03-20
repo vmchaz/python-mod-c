@@ -63,14 +63,14 @@ st = testmod.DemoRec(100)
 print("Dir DemoRec:")
 print(dir(st))
 
-print('st.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.val1, st.val2, st.val3))
+print('st.id={}\nst.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.id, st.val1, st.val2, st.val3))
 st = testmod.func_ret_struct(st)
 print("ret func_ret_struct:")
-print('st.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.val1, st.val2, st.val3))
+print('st.id={}\nst.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.id, st.val1, st.val2, st.val3))
 
 st = testmod.func_ret_struct(st)
 print("ret func_ret_struct:")
-print('st.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.val1, st.val2, st.val3))
+print('st.id = {}\nst.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.id, st.val1, st.val2, st.val3))
 
 for i in range(20):
     testmod.func_set_element(st, i, 1000+i)

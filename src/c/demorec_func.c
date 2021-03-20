@@ -3,7 +3,7 @@
 #include "demorec_struct.h"
 #include "demorec_extern.h"
 
-static PyObject * func_ret_struct(PyObject *self, PyObject *args) 
+PyObject * testmod_func_ret_struct(PyObject *self, PyObject *args) 
 {
     DemoRec *st;
     
@@ -16,7 +16,7 @@ static PyObject * func_ret_struct(PyObject *self, PyObject *args)
     return Py_BuildValue("O", st);
 }
 
-static PyObject * func_set_element(PyObject *self, PyObject *args) 
+PyObject * testmod_func_set_element(PyObject *self, PyObject *args) 
 {
     DemoRec *st;
     int idx;
@@ -31,7 +31,7 @@ static PyObject * func_set_element(PyObject *self, PyObject *args)
     Py_RETURN_NONE;
 }
 
-static PyObject * func_get_element(PyObject *self, PyObject *args) 
+PyObject * testmod_func_get_element(PyObject *self, PyObject *args) 
 {
     DemoRec *st;
     int idx;
