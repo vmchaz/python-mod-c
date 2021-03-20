@@ -84,10 +84,10 @@ print(l)
 vcpu = testmod.VCPU(1)
 print(dir(vcpu))
 for i in range(16):
-    testmod.func_set_register(vcpu, i, i+20)
+    testmod.set_register(vcpu, i, i+20)
     
 for i in range(16):
-    print(testmod.func_get_register(vcpu, i))
+    print(testmod.get_register(vcpu, i))
 
 
 # Вызывай метод print нашей структуры, только по скольку C частично ООП

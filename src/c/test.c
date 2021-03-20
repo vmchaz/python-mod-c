@@ -5,15 +5,14 @@
 #include <Python.h>
 
 #include "test.h"
-#include "demorec_struct.h"
-#include "demorec_extern.h"
-
-#include "demorec_func.h"
+#include "demorec.h"
 
 #include "vcpu.h"
+#include "field.h"
 
-#include "vcpu_func.h"
 #include "basic_func.h"
+#include "advanced_func.h"
+#include "demorec_func.h"
 
 // Список функций модуля
 static PyMethodDef methods[] = {
@@ -25,8 +24,8 @@ static PyMethodDef methods[] = {
     {"func_ret_struct", testmod_func_ret_struct, METH_VARARGS, "func_ret_struct"},
     {"func_get_element", testmod_func_get_element, METH_VARARGS, "func_get_element"},
     {"func_set_element", testmod_func_set_element, METH_VARARGS, "func_set_element"},
-    {"func_get_register", testmod_func_get_register, METH_VARARGS, "func_get_register"},
-    {"func_set_register", testmod_func_set_register, METH_VARARGS, "func_set_register"},
+    {"get_register", testmod_func_get_register, METH_VARARGS, "get_register"},
+    {"set_register", testmod_func_set_register, METH_VARARGS, "set_register"},
     
     {NULL, NULL, 0, NULL}
 };
@@ -59,6 +58,7 @@ PyMODINIT_FUNC PyInit_testmod(void) {
     
     PyModule_AddObject(mod, "DemoRec", (PyObject *) &DemoRec_Type);
     PyModule_AddObject(mod, "VCPU", (PyObject *) &VCPU_Type);
+    //PyModule_AddObject(mod, "Field", (PyObject *) &Field_Type);
     
     return mod;
 }

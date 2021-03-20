@@ -15,8 +15,8 @@ DEPS = $(SRC)/test.h
 
 OBJS = $(BUILD)/test.o \
 	$(BUILD)/demorec.o \
-	$(BUILD)/demorec_func.o \
 	$(BUILD)/vcpu.o \
+	$(BUILD)/field.o \
 	$(BUILD)/basic_func.o \
 	$(BUILD)/advanced_func.o
 
@@ -40,13 +40,13 @@ $(BUILD)/demorec.o: $(DEPS) \
 	$(SRC)/demorec.c
 	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/demorec.o $(SRC)/demorec.c
 	
-$(BUILD)/demorec_func.o: $(DEPS) \
-	$(SRC)/demorec_func.c
-	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/demorec_func.o $(SRC)/demorec_func.c
-	
 $(BUILD)/vcpu.o: $(DEPS) \
 	$(SRC)/vcpu.c
 	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/vcpu.o $(SRC)/vcpu.c
+	
+$(BUILD)/field.o: $(DEPS) \
+	$(SRC)/field.c
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/field.o $(SRC)/field.c
 	
 $(BUILD)/basic_func.o: $(DEPS) \
 	$(SRC)/basic_func.c

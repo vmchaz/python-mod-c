@@ -1,7 +1,6 @@
 //#include "test.h"
 #include <Python.h>
-#include "demorec_struct.h"
-#include "demorec_extern.h"
+#include "demorec.h"
 
 // Создание структуры
 static PyObject * DemoRec_new(PyTypeObject *type, PyObject *args, PyObject *kwds) 
