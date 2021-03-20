@@ -7,7 +7,12 @@
 #include "test.h"
 #include "demorec_struct.h"
 #include "demorec_extern.h"
+
 #include "demorec_func.h"
+
+#include "vcpu.h"
+
+#include "vcpu_func.h"
 #include "basic_func.h"
 
 // Список функций модуля
@@ -18,8 +23,11 @@ static PyMethodDef methods[] = {
     {"func_ret_str", testmod_func_ret_str, METH_VARARGS, "func_ret_str"},
     {"func_many_args", testmod_func_many_args, METH_VARARGS, "func_many_args"},
     {"func_ret_struct", testmod_func_ret_struct, METH_VARARGS, "func_ret_struct"},
-    {"func_set_element", testmod_func_set_element, METH_VARARGS, "func_get_element"},
     {"func_get_element", testmod_func_get_element, METH_VARARGS, "func_get_element"},
+    {"func_set_element", testmod_func_set_element, METH_VARARGS, "func_set_element"},
+    {"func_get_register", testmod_func_get_register, METH_VARARGS, "func_get_register"},
+    {"func_set_register", testmod_func_set_register, METH_VARARGS, "func_set_register"},
+    
     {NULL, NULL, 0, NULL}
 };
 
@@ -43,9 +51,14 @@ PyMODINIT_FUNC PyInit_testmod(void) {
     // Завершение инициализации структуры
     if (PyType_Ready(&DemoRec_Type) < 0)
         return NULL;
+    if (PyType_Ready(&VCPU_Type) < 0)
+        return NULL;        
     
     Py_INCREF(&DemoRec_Type);
+    Py_INCREF(&VCPU_Type);
+    
     PyModule_AddObject(mod, "DemoRec", (PyObject *) &DemoRec_Type);
+    PyModule_AddObject(mod, "VCPU", (PyObject *) &VCPU_Type);
     
     return mod;
 }

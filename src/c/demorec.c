@@ -27,16 +27,6 @@ static void DemoRec_dealloc(DemoRec* self)
 
 
 // Инициализация структуры, заполняем её переданными значениями
-/*static int DemoRec_init(DemoRec *self, PyObject *args, PyObject *kwds) {
-    static char *kwlist[] = {"val1", "val2", "val3", NULL};
-
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "|idb", kwlist, &self->val1, &self->val2, &self->val3))
-        return -1;
-
-    return 0;
-}*/
-
-
 static int DemoRec_init(DemoRec *self, PyObject *args, PyObject *kwds) {
     //static char *kwlist[] = {"val1", "val2", "val3", NULL};
     static char *kwlist[] = {"id", NULL};
@@ -63,28 +53,9 @@ static PyMemberDef DemoRec_members[] =
 };
 
 
-// Метод структуры, который печатает структуру
-//static PyObject* DemoRec_print(PyObject *self, PyObject *args)
-//{
-//    DemoRec *st;
-    
-    // Получаем структуру из Python
-//    if (!PyArg_ParseTuple(args, "O", &st)) // O - объект данных
-//        Py_RETURN_NONE;
-//    
-//    printf("method: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-//    Py_RETURN_NONE;
-//}
-
 // Описание методов стрктуры, но у классической структуры не может быть методов!
-// А здесь может!
-//static PyMethodDef DemoRec_methods[] = {
-//    {"print", DemoRec_print, METH_VARARGS, "doc string"},
-//    {NULL}  /* Sentinel */
-//};
-
-
-static PyMethodDef DemoRec_methods[] = {
+static PyMethodDef DemoRec_methods[] = 
+{
     {NULL}  /* Sentinel */
 };
 

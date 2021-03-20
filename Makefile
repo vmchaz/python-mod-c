@@ -16,7 +16,9 @@ DEPS = $(SRC)/test.h
 OBJS = $(BUILD)/test.o \
 	$(BUILD)/demorec.o \
 	$(BUILD)/demorec_func.o \
-	$(BUILD)/basic_func.o
+	$(BUILD)/vcpu.o \
+	$(BUILD)/basic_func.o \
+	$(BUILD)/advanced_func.o
 
 BINS = $(BUILD)/testmod.so
 
@@ -42,9 +44,17 @@ $(BUILD)/demorec_func.o: $(DEPS) \
 	$(SRC)/demorec_func.c
 	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/demorec_func.o $(SRC)/demorec_func.c
 	
+$(BUILD)/vcpu.o: $(DEPS) \
+	$(SRC)/vcpu.c
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/vcpu.o $(SRC)/vcpu.c
+	
 $(BUILD)/basic_func.o: $(DEPS) \
 	$(SRC)/basic_func.c
-	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/basic_func.o $(SRC)/basic_func.c		
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/basic_func.o $(SRC)/basic_func.c
+	
+$(BUILD)/advanced_func.o: $(DEPS) \
+	$(SRC)/advanced_func.c
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/advanced_func.o $(SRC)/advanced_func.c
 
 clean:
 	rm -rf $(BUILD)
