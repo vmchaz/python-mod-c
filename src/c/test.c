@@ -16,6 +16,8 @@ static PyMethodDef methods[] = {
     {"func_ret_str", func_ret_str, METH_VARARGS, "func_ret_str"},
     {"func_many_args", func_many_args, METH_VARARGS, "func_many_args"},
     {"func_ret_struct", func_ret_struct, METH_VARARGS, "func_ret_struct"},
+    {"func_set_element", func_set_element, METH_VARARGS, "func_get_element"},
+    {"func_get_element", func_get_element, METH_VARARGS, "func_get_element"},
     {NULL, NULL, 0, NULL}
 };
 
@@ -29,9 +31,10 @@ PyMODINIT_FUNC PyInit_testmod(void) {
     PyObject *mod = PyModule_Create(&module);
 
     // Добавляем глобальные переменные
-    PyModule_AddObject(mod, "a", PyLong_FromLong(a)); // int
-    PyModule_AddObject(mod, "b", PyFloat_FromDouble(b)); // double
-    PyModule_AddObject(mod, "c", Py_BuildValue("b", c)); // char
+    
+    PyModule_AddObject(mod, "ModuleVarA", PyLong_FromLong(ModuleVarA)); // int
+    PyModule_AddObject(mod, "ModuleVarB", PyFloat_FromDouble(ModuleVarB)); // double
+    PyModule_AddObject(mod, "ModuleVarC", Py_BuildValue("b", ModuleVarC)); // char
 
     // Добавляем структуру
     
@@ -49,19 +52,22 @@ PyMODINIT_FUNC PyInit_testmod(void) {
  * Тестовые функции, тестовые переменные.
  */
 
-int a = 5;
-double b = 5.12345;
-char c = 'X'; // 88
+int ModuleVarA = 5;
+double ModuleVarB = 5.12345;
+char ModuleVarC = 'X'; // 88
 
-static PyObject * func_hello(PyObject *self, PyObject *args) { // Можно без args, но будет warning при компиляции.
+static PyObject * func_hello(PyObject *self, PyObject *args) 
+{ // Можно без args, но будет warning при компиляции.
     puts("Hello!");
     Py_RETURN_NONE;
 }
 
+
 /**
  * Получение значения переменной содержащей значение типа int и возврат его.
  */
-static PyObject * func_ret_int(PyObject *self, PyObject *args) {
+static PyObject * func_ret_int(PyObject *self, PyObject *args) 
+{
     int val;
 
     // Проверка кол-ва аргументов
@@ -143,6 +149,7 @@ static PyObject * func_many_args(PyObject *self, PyObject *args) {
     return Py_BuildValue("ifs", val1, val2, val3);
 }
 
+
 static PyObject * func_ret_struct(PyObject *self, PyObject *args) {
     
     DemoRec *st;
@@ -154,4 +161,34 @@ static PyObject * func_ret_struct(PyObject *self, PyObject *args) {
     printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
 
     return Py_BuildValue("O", st);
+}
+
+static PyObject * func_set_element(PyObject *self, PyObject *args) 
+{
+    DemoRec *st;
+    int idx;
+    int val;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oii", &st, &idx, &val)) // O - объект данных
+        Py_RETURN_NONE;
+    
+    st->data[idx] = val;
+    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
+    Py_RETURN_NONE;
+}
+
+static PyObject * func_get_element(PyObject *self, PyObject *args) 
+{
+    DemoRec *st;
+    int idx;
+    int val;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oi", &st, &idx)) // O - объект данных
+        Py_RETURN_NONE;
+    
+    val = st->data[idx];
+    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
+    Py_BuildValue("i", val);
 }

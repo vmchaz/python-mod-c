@@ -14,7 +14,7 @@ INCS = -I$(SRC)
 DEPS = $(SRC)/test.h 
 
 OBJS = $(BUILD)/test.o \
-	$(BUILD)/struct.o 
+	$(BUILD)/demorec.o 
 
 BINS = $(BUILD)/testmod.so
 
@@ -32,9 +32,9 @@ $(BUILD)/test.o: $(DEPS) \
 	$(SRC)/test.c
 	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/test.o $(SRC)/test.c
 
-$(BUILD)/struct.o: $(DEPS) \
-	$(SRC)/struct.c
-	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/struct.o $(SRC)/struct.c
+$(BUILD)/demorec.o: $(DEPS) \
+	$(SRC)/demorec.c
+	$(CC) -c $(CFLAGS) -fPIC $(INCS) -o $(BUILD)/demorec.o $(SRC)/demorec.c
 
 clean:
 	rm -rf $(BUILD)

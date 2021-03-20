@@ -41,15 +41,15 @@ print('ret func_many_args: ', testmod.func_many_args(15, 18.1617, "Many argument
 ##
 
 print('\nРабота с переменными:')
-print('ret a: ', testmod.a)
+print('ret a: ', testmod.ModuleVarA)
 
 # Изменяем значение переменной.
-testmod.a = 22
-print('new a: ', testmod.a)
+testmod.ModuleVarA = 22
+print('new a: ', testmod.ModuleVarA)
 
-print('ret b: ', testmod.b)
+print('ret b: ', testmod.ModuleVarB)
 
-print('ret c: ', testmod.c)
+print('ret c: ', testmod.ModuleVarC)
 
 
 ##
@@ -59,7 +59,7 @@ print('ret c: ', testmod.c)
 print('\nРабота со структурами:')
 
 # Создаем структуру
-st = testmod.DemoRec(1, 2.3456789, 88)
+st = testmod.DemoRec(100)
 print("Dir DemoRec:")
 print(dir(st))
 
@@ -67,6 +67,20 @@ print('st.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.val1, st.val2, st.val
 st = testmod.func_ret_struct(st)
 print("ret func_ret_struct:")
 print('st.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.val1, st.val2, st.val3))
+
+st = testmod.func_ret_struct(st)
+print("ret func_ret_struct:")
+print('st.val1 = {}\nst.val2 = {}\nst.val3 = {}'.format(st.val1, st.val2, st.val3))
+
+for i in range(20):
+    testmod.func_set_element(st, i, 1000+i)
+    
+l = []
+for i in range(200):
+    l.append(testmod.func_get_element(st, i))
+    
+print(l)
+
 # Вызывай метод print нашей структуры, только по скольку C частично ООП
 # То нужно в этод метод передать указатель на нашу структуру
 # st.print(st)
