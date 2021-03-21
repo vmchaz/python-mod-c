@@ -12,8 +12,12 @@ static PyObject * VCPU_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (self != NULL) {
         self->id = 0;
         self->ip = 0;
-        self->flags = 0;
+        self->accumulator = 0;
+        self->flags = 0;        
         self->stop_flag = 0;
+        self->error_flag = 0;
+        memset(&self->ip_mod_flag, 0, sizeof(self->ip_mod_flag));
+        
         for(int i=0; i<16; i++)
             self->registers[i] = 0;
     }
@@ -50,8 +54,21 @@ static PyMemberDef VCPU_members[] =
 {
     {"id", T_INT, offsetof(VCPU, id), 0, "int"},
     {"ip", T_INT, offsetof(VCPU, ip), 0, "int"},
+    {"accumulator", T_INT, offsetof(VCPU, accumulator), 0, "int"},
+    
+    {"r0", T_INT, offsetof(VCPU, registers[0]), 0, "int"},
+    {"r1", T_INT, offsetof(VCPU, registers[1]), 0, "int"},
+    {"r2", T_INT, offsetof(VCPU, registers[2]), 0, "int"},
+    {"r3", T_INT, offsetof(VCPU, registers[3]), 0, "int"},
+    
+    {"r4", T_INT, offsetof(VCPU, registers[4]), 0, "int"},
+    {"r5", T_INT, offsetof(VCPU, registers[5]), 0, "int"},
+    {"r6", T_INT, offsetof(VCPU, registers[6]), 0, "int"},
+    {"r7", T_INT, offsetof(VCPU, registers[7]), 0, "int"},
+     
     {"flags", T_INT, offsetof(VCPU, flags), 0, "int"},
     {"stop_flag", T_INT, offsetof(VCPU, stop_flag), 0, "int"},
+    {"error_flag", T_INT, offsetof(VCPU, error_flag), 0, "int"},
     {NULL}
 };
 

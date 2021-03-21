@@ -100,6 +100,76 @@ PyObject * testmod_func_get_register(PyObject *self, PyObject *args)
 
 
 
+PyObject * testmod_func_set_instruction(PyObject *self, PyObject *args) 
+{
+    InstructionSequence * sequence;
+    int idx;
+    int cmd;
+    int reg_dest;
+    int reg_src;
+    int imm;
+    int flags_allow;
+    int flags_deny;
+    int flags_target;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oiiiiiiii", &sequence, &idx, &cmd, &reg_dest, &reg_src, &imm, &flags_allow, &flags_deny, &flags_target)) // O - объект данных
+        Py_RETURN_NONE;
+        
+    if ((idx < 0) || (idx >= sequence->count))
+        Py_RETURN_NONE;
+    
+    sequence->instructions[idx].cmd = cmd;
+    sequence->instructions[idx].reg_dest = reg_dest;
+    sequence->instructions[idx].reg_src = reg_src;
+    sequence->instructions[idx].imm = imm;
+    
+    sequence->instructions[idx].flags_allow = flags_allow;
+    sequence->instructions[idx].flags_deny = flags_deny;
+    sequence->instructions[idx].flags_target = flags_target;
+    
+    Py_RETURN_NONE;
+}
+
+
+
+PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args) 
+{
+    InstructionSequence * sequence;
+    int idx;
+    int cmd;
+    int reg_dest;
+    int reg_src;
+    int imm;
+    int flags_allow;
+    int flags_deny;
+    int flags_target;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oiiiiiii", &sequence, &cmd, &reg_dest, &reg_src, &imm, &flags_allow, &flags_deny, &flags_target)) // O - объект данных
+        Py_RETURN_NONE;
+        
+    if (sequence->count >= MaxInstructions)
+        Py_RETURN_NONE;
+    
+    idx = sequence->count;
+    
+    sequence->instructions[idx].cmd = cmd;
+    sequence->instructions[idx].reg_dest = reg_dest;
+    sequence->instructions[idx].reg_src = reg_src;
+    sequence->instructions[idx].imm = imm;
+    
+    sequence->instructions[idx].flags_allow = flags_allow;
+    sequence->instructions[idx].flags_deny = flags_deny;
+    sequence->instructions[idx].flags_target = flags_target;
+    
+    sequence->count++;
+    
+    Py_RETURN_NONE;
+}
+
+
+
 PyObject * testmod_vcpu_step(PyObject *self, PyObject *args) 
 {
     VCPU * vcpu;

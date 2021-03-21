@@ -20,6 +20,8 @@ extern PyTypeObject InstructionSequence_Type;
 }
 #endif
 
+#define MaxInstructions 256
+
 typedef struct Instruction_s Instruction;
 
 struct Instruction_s {

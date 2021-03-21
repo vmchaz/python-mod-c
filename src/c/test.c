@@ -16,6 +16,8 @@
 #include "advanced_func.h"
 #include "demorec_func.h"
 
+
+
 // Список функций модуля
 static PyMethodDef methods[] = {
     {"func_hello", testmod_func_hello, METH_NOARGS, "func_hello"}, // Функция без аргументов
@@ -28,6 +30,7 @@ static PyMethodDef methods[] = {
     {"func_set_element", testmod_func_set_element, METH_VARARGS, "func_set_element"},
     {"get_register", testmod_func_get_register, METH_VARARGS, "get_register"},
     {"set_register", testmod_func_set_register, METH_VARARGS, "set_register"},
+    {"set_instruction", testmod_func_set_instruction, METH_VARARGS, "set_instruction"},
     {"vcpu_step", testmod_vcpu_step, METH_VARARGS, "vcpu_step"},
     
     {NULL, NULL, 0, NULL}
