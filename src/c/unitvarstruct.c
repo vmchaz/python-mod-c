@@ -1,6 +1,7 @@
 //#include "test.h"
 #include <Python.h>
 #include "unitvarstruct.h"
+#include "actions.h"
 
 // Создание структуры
 static PyObject * UnitVarStruct_new(PyTypeObject *type, PyObject *args, PyObject *kwds) 
@@ -30,15 +31,15 @@ static void UnitVarStruct_dealloc(UnitVarStruct * self)
 // Инициализация структуры, заполняем её переданными значениями
 static int UnitVarStruct_init(UnitVarStruct *self, PyObject *args, PyObject *kwds) {
     //static char *kwlist[] = {"val1", "val2", "val3", NULL};
-    static char *kwlist[] = {"id", "energy", "x", "y", "direction", NULL};
+    static char *kwlist[] = {"id", "energy", "x", "y", NULL};
     
     int id;
     int energy;
     int x;
     int y;
-    int direction;
+    int direction = 0;
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "iiiii", kwlist, &id, &energy, &x, &y, &direction))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "iiii", kwlist, &id, &energy, &x, &y))
         return -1;
         
     self->id = id;
@@ -46,6 +47,9 @@ static int UnitVarStruct_init(UnitVarStruct *self, PyObject *args, PyObject *kwd
     self->y = y;
     self->energy = energy;
     self->direction = direction;
+    self->action = actSTAY;
+    self->action_p = 0;
+    self->use_action_p = 0;
 
     return 0;
 }
@@ -56,6 +60,9 @@ static PyMemberDef UnitVarStruct_members[] =
 {
     {"id", T_INT, offsetof(UnitVarStruct, id), 0, "int"},
     {"energy", T_INT, offsetof(UnitVarStruct, energy), 0, "int"},
+    {"action", T_INT, offsetof(UnitVarStruct, action), 0, "int"},
+    {"action_p", T_INT, offsetof(UnitVarStruct, action_p), 0, "int"},
+    {"use_action_p", T_INT, offsetof(UnitVarStruct, use_action_p), 0, "int"},
     {"x", T_INT, offsetof(UnitVarStruct, x), 0, "int"},
     {"y", T_INT, offsetof(UnitVarStruct, y), 0, "int"},
     {"direction", T_INT, offsetof(UnitVarStruct, direction), 0, "int"},

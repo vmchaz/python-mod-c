@@ -40,7 +40,7 @@
 #define cmdLESS_RA 38
 #define cmdLESS_AR 39
 #define cmdLESS_AI 40
-#define cmdSET_ACTION_STAND 41
+#define cmdSET_ACTION_STAY 41
 #define cmdSET_ACTION_EAT 42
 #define cmdSET_ACTION_FORWARD 43
 #define cmdSET_ACTION_TURN_LEFT 44

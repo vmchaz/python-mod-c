@@ -10,7 +10,8 @@
 #include "unitvarstruct.h"
 #include "opcodes.h"
 
-
+#include "fieldobjecttypes.h"
+#include "actions.h"
 
 
 int check_register(int reg)
@@ -79,6 +80,114 @@ int set_flags(VCPU * vcpu, int flags, bool v)
     vcpu->flags |= flags;
     if (!v)
         vcpu->flags ^= flags;
+}
+
+
+int field_get_obj_type(Field * field, int x, int y)
+{
+    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
+    {
+        return field->cells[y*field->width + x].type;
+    }
+    return -1;
+}
+
+int field_get_full_obj_data(Field * field, int x, int y, void ** obj, int * type, int * subtype)
+{
+    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
+    {
+        *obj = field->cells[y*field->width + x].obj; 
+        *type = field->cells[y*field->width + x].type;
+        *subtype = field->cells[y*field->width + x].subtype;
+        return 0;
+    }
+    return -1;
+}
+
+int cDirectionDX[4] = {0, 1, 0, -1};
+int cDirectionDY[4] = {-1, 0, 1, 0};
+
+int field_detect_food(Field * field, int x, int y, int direction)
+{
+    int r[4] = {0, 0, 0, 0};
+    for(int i=0; i<4; i++)
+    {
+        int new_dir = (direction + i) % 4;
+        int t = 0;
+        int st = 0;
+        void * obj;
+        int res = field_get_full_obj_data(field, x+cDirectionDX[new_dir], y+cDirectionDY[new_dir], &obj, &t, &st);
+        if ((res == 0) && (t == ftFOOD))
+            r[i] = 1;
+    }
+    return r[0] | (r[1] << 1) | (r[2] << 2) | (r[3] << 3);
+}
+
+int field_detect_obstacle(Field * field, int x, int y, int direction)
+{
+    int r[4] = {0, 0, 0, 0};
+    for(int i=0; i<4; i++)
+    {
+        int new_dir = (direction + i) % 4;
+        int t = 0;
+        int st = 0;
+        void * obj;
+        int res = field_get_full_obj_data(field, x+cDirectionDX[new_dir], y+cDirectionDY[new_dir], &obj, &t, &st);
+        if (((res == 0) && ((t == ftFOOD) || (t == ftOBSTACLE) || (t == ftANIMAL))) || (res == 1))
+            r[i] = 1;
+    }
+    return r[0] | (r[1] << 1) | (r[2] << 2) | (r[3] << 3);
+}
+
+
+int field_detect_hazard(Field * field, int x, int y, int direction)
+{
+    int r[4] = {0, 0, 0, 0};
+    for(int i=0; i<4; i++)
+    {
+        int new_dir = (direction + i) % 4;
+        int t = 0;
+        int st = 0;
+        void * obj;
+        int res = field_get_full_obj_data(field, x+cDirectionDX[new_dir], y+cDirectionDY[new_dir], &obj, &t, &st);
+        if ((res == 0) && (t == ftHAZARD))
+            r[i] = 1;
+    }
+    return r[0] | (r[1] << 1) | (r[2] << 2) | (r[3] << 3);
+}
+
+
+int field_detect_predator(Field * field, int x, int y, int direction)
+{
+    int r[4] = {0, 0, 0, 0};
+    for(int i=0; i<4; i++)
+    {
+        int new_dir = (direction + i) % 4;
+        int t = 0;
+        int st = 0;
+        void * obj;
+        int res = field_get_full_obj_data(field, x+cDirectionDX[new_dir], y+cDirectionDY[new_dir], &obj, &t, &st);
+        if ((res == 0) && (t == ftANIMAL) && (st == fstPREDATOR))
+            r[i] = 1;
+    }
+    return r[0] | (r[1] << 1) | (r[2] << 2) | (r[3] << 3);
+}
+
+
+int field_detect_prey(Field * field, int x, int y, int direction)
+{
+    int r[4] = {0, 0, 0, 0};
+    for(int i=0; i<4; i++)
+    {
+        int new_dir = (direction + i) % 4;
+        int t = 0;
+        int st = 0;
+        void * obj;
+        int res = field_get_full_obj_data(field, x+cDirectionDX[new_dir], y+cDirectionDY[new_dir], &obj, &t, &st);
+        if ((res == 0) && (t == ftANIMAL) && (t == fstPREY))
+            r[i] = 1;
+    }
+    return r[0] | (r[1] << 1) | (r[2] << 2) | (r[3] << 3);
 }
 
 
@@ -331,48 +440,103 @@ int lf_less_ai(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStr
 
 
 
-int lf_set_action_stand(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
+int lf_set_action_stay(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actSTAY;
+    }
+        
     return 0;
 }
 
 int lf_set_action_eat(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actEAT;
+    }
     return 0;
 }
 
 int lf_set_action_forward(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actFORWARD;
+    }
     return 0;
 }
 
 int lf_set_action_turn_left(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actTURN_LEFT;
+    }
     return 0;
 }
 
 int lf_set_action_turn_right(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actTURN_RIGHT;
+    }
     return 0;
 }
 
 int lf_set_action_turn_backward(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actTURN_BACKWARD;
+    }
     return 0;
 }
 
 int lf_set_action_turn_move_left(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actTURN_MOVE_LEFT;
+    }
     return 0;
 }
 
 int lf_set_action_turn_move_right(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actTURN_MOVE_RIGHT;
+    }
     return 0;
 }
 
 int lf_set_action_turn_move_backward(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int p = 1;
+    if (((u->use_action_p == 1) && (p > u->action_p)) || (u->use_action_p == 0))
+    {
+        u->action_p = p;
+        u->action = actTURN_MOVE_BACKWARD;
+    }
     return 0;
 }
 
@@ -381,26 +545,36 @@ int lf_set_action_turn_move_backward(VCPU * vcpu, Instruction * instruction, Fie
 
 int lf_detect_obstacle(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int r = field_detect_obstacle(field, u->x, u->y, u->direction);
+    vcpu->flags = (vcpu->flags & 0x0f) | (r << 16);
     return 0;
 }
 
 int lf_detect_food(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int r = field_detect_food(field, u->x, u->y, u->direction);
+    vcpu->flags = (vcpu->flags & 0x0f) | (r << 16);
     return 0;
 }
 
 int lf_detect_hazard(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int r = field_detect_hazard(field, u->x, u->y, u->direction);
+    vcpu->flags = (vcpu->flags & 0x0f) | (r << 16);
     return 0;
 }
 
 int lf_detect_predator(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int r = field_detect_predator(field, u->x, u->y, u->direction);
+    vcpu->flags = (vcpu->flags & 0x0f) | (r << 16);
     return 0;
 }
 
 int lf_detect_prey(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarStruct * u)
 {
+    int r = field_detect_prey(field, u->x, u->y, u->direction);
+    vcpu->flags = (vcpu->flags & 0x0f) | (r << 16);
     return 0;
 }
 
@@ -614,8 +788,8 @@ int vcpu_switch(VCPU * vcpu, Instruction * instruction, Field * field, UnitVarSt
         
         
         
-    else if (instruction->cmd == cmdSET_ACTION_STAND) {
-        lf_set_action_stand(vcpu, instruction, field, u); }
+    else if (instruction->cmd == cmdSET_ACTION_STAY) {
+        lf_set_action_stay(vcpu, instruction, field, u); }
     else if (instruction->cmd == cmdSET_ACTION_EAT) {
         lf_set_action_eat(vcpu, instruction, field, u); }
     else if (instruction->cmd == cmdSET_ACTION_FORWARD) {

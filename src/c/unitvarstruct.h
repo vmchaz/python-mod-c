@@ -20,15 +20,15 @@ extern PyTypeObject UnitVarStruct_Type;
 }
 #endif
 
-#define MaxFieldWidth 10
-#define MaxFieldHeight 10
-
 typedef struct UnitVarStruct_s UnitVarStruct;
 
 struct UnitVarStruct_s {
     PyObject_HEAD // Макрос объявления нового типа, объекта фиксированного размера
     int id;
     int energy;
+    int action;
+    int action_p;
+    int use_action_p;
     int x;
     int y;
     int direction;

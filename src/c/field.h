@@ -20,13 +20,14 @@ extern PyTypeObject Field_Type;
 }
 #endif
 
-#define MaxFieldWidth 10
-#define MaxFieldHeight 10
+#define MaxFieldWidth 100
+#define MaxFieldHeight 100
 
 typedef struct FieldCell_s FieldCell;
 
 struct FieldCell_s {
     int type;
+    int subtype;
     void * obj;
 };
 
@@ -37,7 +38,7 @@ struct Field_s {
     int width;
     int height;
     int size;
-    FieldCell cells[100];
+    FieldCell cells[10000];
 };
 
 #endif

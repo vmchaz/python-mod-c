@@ -3,7 +3,7 @@
 
 #define   actNONE 0
     
-#define   actSTAND 1
+#define   actSTAY 1
 #define   actEAT 2
 #define   actFORWARD 3
     

@@ -31,7 +31,11 @@ static PyMethodDef methods[] = {
     {"get_register", testmod_func_get_register, METH_VARARGS, "get_register"},
     {"set_register", testmod_func_set_register, METH_VARARGS, "set_register"},
     {"set_instruction", testmod_func_set_instruction, METH_VARARGS, "set_instruction"},
+    {"add_instruction", testmod_func_add_instruction, METH_VARARGS, "add_instruction"},    
     {"vcpu_step", testmod_vcpu_step, METH_VARARGS, "vcpu_step"},
+    {"field_set_object", testmod_field_set_object, METH_VARARGS, "field_set_object"},
+    {"field_get_object", testmod_field_get_object, METH_VARARGS, "field_get_object"},
+    {"field_get_object_type", testmod_field_get_object_type, METH_VARARGS, "field_get_object_type"},                    
     
     {NULL, NULL, 0, NULL}
 };

@@ -25,6 +25,8 @@ PyObject * testmod_func_ret_struct(PyObject *self, PyObject *args)
     return Py_BuildValue("O", st);
 }
 
+
+
 PyObject * testmod_func_set_element(PyObject *self, PyObject *args) 
 {
     DemoRec *st;
@@ -39,6 +41,8 @@ PyObject * testmod_func_set_element(PyObject *self, PyObject *args)
     //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
     Py_RETURN_NONE;
 }
+
+
 
 PyObject * testmod_func_get_element(PyObject *self, PyObject *args) 
 {
@@ -58,6 +62,11 @@ PyObject * testmod_func_get_element(PyObject *self, PyObject *args)
 
 
 //==========================================================================
+
+
+
+
+
 
 
 
@@ -184,4 +193,103 @@ PyObject * testmod_vcpu_step(PyObject *self, PyObject *args)
     int res = vcpu_step(vcpu, sequence, field, u, maxsteps);
     
     Py_BuildValue("i", res);
+}
+
+
+
+// ===================================================================================
+
+PyObject * testmod_field_set_object(PyObject *self, PyObject *args) 
+{
+    Field * field;
+    void * obj;
+    int obj_t;
+    int x;
+    int y;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "OiiOi", &field, &x, &y, &obj, &obj_t)) // O - объект данных
+        Py_RETURN_NONE;
+    
+    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
+    {
+        int offset = y * field->width + x;
+        field->cells[offset].obj = obj;
+        field->cells[offset].type = obj_t;
+    }
+    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
+    Py_RETURN_NONE;
+}
+
+
+PyObject * testmod_field_get_object(PyObject *self, PyObject *args) 
+{
+    Field * field;
+    void * obj;
+    int obj_t;
+    int x;
+    int y;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oii", &field, &x, &y)) // O - объект данных
+        Py_RETURN_NONE;
+    
+    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
+    {
+        int offset = y * field->width + x;
+        obj = field->cells[offset].obj;
+        if (obj == NULL)
+            Py_RETURN_NONE;
+        
+        return Py_BuildValue("O", obj);
+        
+    }
+    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
+    Py_RETURN_NONE;
+}
+
+
+PyObject * testmod_field_get_object_type(PyObject *self, PyObject *args) 
+{
+    Field * field;
+    void * obj;
+    int obj_t;
+    int x;
+    int y;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oii", &field, &x, &y)) // O - объект данных
+        Py_RETURN_NONE;
+    
+    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
+    {
+        int offset = y * field->width + x;
+        obj_t = field->cells[offset].type;
+
+        return Py_BuildValue("i", obj_t);
+    }
+    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
+    Py_RETURN_NONE;
+}
+
+PyObject * testmod_field_get_object_subtype(PyObject *self, PyObject *args) 
+{
+    Field * field;
+    int obj_st;
+    int x;
+    int y;
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oii", &field, &x, &y)) // O - объект данных
+        Py_RETURN_NONE;
+    
+    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
+    {
+        int offset = y * field->width + x;
+        obj_st = field->cells[offset].subtype;
+
+        return Py_BuildValue("i", obj_st);
+    }
+    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
+    Py_RETURN_NONE;
 }
