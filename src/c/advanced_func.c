@@ -8,6 +8,8 @@
 #include "unitvarstruct_repr.h"
 #include "instructionsequence.h"
 #include "instructionsequence_repr.h"
+#include "animal.h"
+#include "animal_repr.h"
 
 
 PyObject * testmod_func_get_instruction_count(PyObject *self, PyObject *args) 
@@ -140,6 +142,45 @@ PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args)
     sequence->count += 1;
     
     Py_RETURN_NONE;
+}
+
+
+
+PyObject * testmod_func_animal_get_instruction_seq(PyObject * self, PyObject *args)
+{
+    Animal_Repr * animal_r = NULL;
+    InstructionSequence_Repr * sequence_r = NULL;
+    int idx;
+    
+    if (! PyArg_ParseTuple(args, "OiO", &animal_r, &idx, &sequence_r))
+        Py_RETURN_NONE;
+        
+    Animal * animal = &animal_r->animal;
+    if ((idx < 0) || (idx >= animal->thread_count))
+        Py_RETURN_NONE;
+        
+    InstructionSequence * sequence_dest = &sequence_r->sequence;
+    InstructionSequence * sequence_src = &animal->sequences[idx];
+    memcpy(sequence_dest, sequence_src, sizeof(InstructionSequence));
+}
+
+PyObject * testmod_func_animal_set_instruction_seq(PyObject * self, PyObject *args)
+{
+    Animal_Repr * animal_r = NULL;
+    InstructionSequence_Repr * sequence_r = NULL;
+    int idx;
+    if (! PyArg_ParseTuple(args, "OiO", &animal_r, &idx, &sequence_r))
+        Py_RETURN_NONE;
+        
+    Animal * animal = &animal_r->animal;
+    if ((idx < 0) || (idx >= animal->thread_count))
+        Py_RETURN_NONE;
+    
+    
+    InstructionSequence * sequence_src = &sequence_r->sequence;
+    InstructionSequence * sequence_dest = &animal->sequences[idx];
+    
+    memcpy(sequence_dest, sequence_src, sizeof(InstructionSequence));
 }
 
 

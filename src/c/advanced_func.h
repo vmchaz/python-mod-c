@@ -7,6 +7,9 @@
 //PyObject * testmod_func_get_element(PyObject *self, PyObject *args);
 
 //PyObject * testmod_func_set_register(PyObject *self, PyObject *args);
+PyObject * testmod_func_animal_get_instruction_seq(PyObject *self, PyObject *args);
+PyObject * testmod_func_animal_set_instruction_seq(PyObject *self, PyObject *args);
+
 PyObject * testmod_func_get_instruction(PyObject *self, PyObject *args);
 PyObject * testmod_func_set_instruction(PyObject *self, PyObject *args);
 PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args);

@@ -28,22 +28,30 @@ static void Animal_Repr_dealloc(Animal_Repr * self)
 // Инициализация структуры, заполняем её переданными значениями
 static int Animal_Repr_init(Animal_Repr *self, PyObject *args, PyObject *kwds) {
     //static char *kwlist[] = {"val1", "val2", "val3", NULL};
-    static char *kwlist[] = {"id", "energy", "x", "y", NULL};
+    static char *kwlist[] = {"id", "thread_count", "energy", "x", "y", NULL};
     
     int id;
     int energy;
     int x;
     int y;
     int direction;
+    int thread_count;
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "iiiii", kwlist, &id, &energy, &x, &y, &direction))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "iiiiii", kwlist, &id, &thread_count, &energy, &x, &y, &direction))
         return -1;
         
+    if (thread_count < 0)
+        thread_count = 0;
+        
+    if (thread_count > 16)
+        thread_count = 16;
+        
     self->animal.id = id;
+    self->animal.thread_count = thread_count;
     self->animal.unitvarstruct.x = x;
     self->animal.unitvarstruct.y = y;
     self->animal.unitvarstruct.energy = energy;
-    self->animal.unitvarstruct.direction = energy;
+    self->animal.unitvarstruct.direction = direction;
     
     self->animal.unitvarstruct.action = actSTAY;
     self->animal.unitvarstruct.action_p = 0;
@@ -57,6 +65,7 @@ static int Animal_Repr_init(Animal_Repr *self, PyObject *args, PyObject *kwds) {
 static PyMemberDef Animal_Repr_members[] = 
 {
     {"id", T_INT, offsetof(Animal_Repr, animal.id), 0, "int"},
+    {"thread_count", T_INT, offsetof(Animal_Repr, animal.thread_count), 0, "int"},
     {"energy", T_INT, offsetof(Animal_Repr, animal.unitvarstruct.energy), 0, "int"},
     {"action", T_INT, offsetof(Animal_Repr, animal.unitvarstruct.action), 0, "int"},
     {"action_p", T_INT, offsetof(Animal_Repr, animal.unitvarstruct.action_p), 0, "int"},

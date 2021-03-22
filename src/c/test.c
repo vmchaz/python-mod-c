@@ -33,8 +33,11 @@ static PyMethodDef methods[] = {
 //    {"set_register", testmod_func_set_register, METH_VARARGS, "Function set_register"},
 //    {"set_instruction", testmod_func_set_instruction, METH_VARARGS, "Function set_instruction"},
     {"get_instruction", testmod_func_get_instruction, METH_VARARGS , "Function get_instruction"},
-    {"set_instruction", testmod_func_set_instruction, METH_VARARGS, "Function set_instruction"},    
+    {"set_instruction", testmod_func_set_instruction, METH_VARARGS, "Function set_instruction"},
     {"add_instruction", testmod_func_add_instruction, METH_VARARGS, "Function add_instruction"},
+    
+    {"animal_get_instruction_seq", testmod_func_animal_get_instruction_seq, METH_VARARGS , "Function animal_get_instruction_seq"},
+    {"animal_set_instruction_seq", testmod_func_animal_set_instruction_seq, METH_VARARGS , "Function animal_set_instruction_seq"},
 //    {"animal_get_seq", testmod_func_animal_get_seq, METH_VARARGS, "tmp0"},
 //    {"animal_set_seq", testmod_func_animal_set_seq, METH_VARARGS, "tmp1"},
 //    {"animal_get_vcpu", testmod_func_animal_get_vcpu, METH_VARARGS, "tmp2"},

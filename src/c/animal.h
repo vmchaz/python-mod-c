@@ -9,6 +9,7 @@
 typedef struct {
     int id;
     int next_thread;
+    int thread_count;
     VCPU vcpus[16];
     InstructionSequence sequences[16];
     UnitVarStruct unitvarstruct;
