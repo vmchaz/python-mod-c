@@ -28,7 +28,7 @@ static void Animal_Repr_dealloc(Animal_Repr * self)
 // Инициализация структуры, заполняем её переданными значениями
 static int Animal_Repr_init(Animal_Repr *self, PyObject *args, PyObject *kwds) {
     //static char *kwlist[] = {"val1", "val2", "val3", NULL};
-    static char *kwlist[] = {"id", "thread_count", "energy", "x", "y", NULL};
+    static char *kwlist[] = {"id", "thread_count", "energy", "x", "y", "direction", NULL};
     
     int id;
     int energy;
@@ -36,8 +36,15 @@ static int Animal_Repr_init(Animal_Repr *self, PyObject *args, PyObject *kwds) {
     int y;
     int direction;
     int thread_count;
+    
+    id = 0;
+    energy = 1000;
+    thread_count = 1;
+    x = 0;
+    y = 0;
+    direction = 0;
 
-    if (! PyArg_ParseTupleAndKeywords(args, kwds, "iiiiii", kwlist, &id, &thread_count, &energy, &x, &y, &direction))
+    if (! PyArg_ParseTupleAndKeywords(args, kwds, "|iiiiii", kwlist, &id, &thread_count, &energy, &x, &y, &direction))
         return -1;
         
     if (thread_count < 0)

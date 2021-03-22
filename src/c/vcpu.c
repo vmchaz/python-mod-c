@@ -898,7 +898,7 @@ int vcpu_step(VCPU * vcpu, InstructionSequence * sequence, UnitVarStruct * u)
 
 int vcpu_run(VCPU * vcpu, InstructionSequence * sequence, UnitVarStruct * u, bool stop_on_action, int maxsteps)
 {
-    printf("VCPU:%p InstructionSequence:%p UnitVarStruct:%p maxsteps:%d\n", vcpu, sequence, u, maxsteps);
+    //printf("VCPU:%p InstructionSequence:%p UnitVarStruct:%p maxsteps:%d\n", vcpu, sequence, u, maxsteps);
     if ((vcpu->ip < 0) || (vcpu->ip >= sequence->count))
         return 1;
         
@@ -918,6 +918,14 @@ int vcpu_run(VCPU * vcpu, InstructionSequence * sequence, UnitVarStruct * u, boo
         if (run_infinite == false)
             maxsteps--;
     }
+}
+
+
+int vcpu_reset(VCPU * vcpu)
+{
+    vcpu->ip_mod_flag = 0;
+    vcpu->ip = 0;
+    vcpu->stop_flag = 0;
 }
 
 

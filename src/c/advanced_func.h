@@ -15,7 +15,8 @@ PyObject * testmod_func_set_instruction(PyObject *self, PyObject *args);
 PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args);
 
 PyObject * testmod_vcpu_run(PyObject *self, PyObject *args);
-//PyObject * testmod_vcpu_set_callback(PyObject *self, PyObject *args);
+PyObject * testmod_vcpu_reset(PyObject *self, PyObject *args);
+PyObject * testmod_vcpu_get_state(PyObject *self, PyObject *args);
 
 //PyObject * testmod_field_set_object(PyObject *self, PyObject *args);
 //PyObject * testmod_field_get_object(PyObject *self, PyObject *args);

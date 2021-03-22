@@ -23,5 +23,6 @@ typedef struct {
 int vcpu_step(VCPU * vcpu, InstructionSequence * sequence, UnitVarStruct * u);
 int vcpu_run(VCPU * vcpu, InstructionSequence * sequence, UnitVarStruct * u, bool stop_on_action, int maxsteps);
 int vcpu_init(VCPU * vcpu, int id);
+int vcpu_reset(VCPU * vcpu);
 
 #endif

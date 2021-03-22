@@ -10,8 +10,8 @@
 
 #include "vcpu_repr.h"
 #include "instructionsequence_repr.h"
-#include "field.h"
 #include "unitvarstruct_repr.h"
+#include "animal_repr.h"
 
 #include "basic_func.h"
 #include "advanced_func.h"
@@ -44,7 +44,9 @@ static PyMethodDef methods[] = {
 //    {"animal_set_vcpu", testmod_func_animal_set_vcpu, METH_VARARGS, "tmp3"},
 //    {"animal_get_unitvarstruct", testmod_func_animal_get_unitvarstruct, METH_VARARGS, "tmp4"},
 //    {"animal_set_unitvarstruct", testmod_func_animal_set_unitvarstruct, METH_VARARGS, "tmp5"},
-    {"vcpu_run", testmod_vcpu_run, METH_VARARGS | METH_KEYWORDS, "Function vcpu_step"},
+    {"vcpu_run", testmod_vcpu_run, METH_VARARGS, "Function vcpu_step"},
+    {"vcpu_get_state", testmod_vcpu_get_state, METH_VARARGS, "Function vcpu_get_state"},
+    {"vcpu_reset", testmod_vcpu_reset, METH_VARARGS, "Function vcpu_reset"},
     //{"vcpu_set_callback", testmod_vcpu_set_callback, METH_VARARGS, "Function vcpu_set_callback"},
     //{"field_set_object", testmod_field_set_object, METH_VARARGS, "Function field_set_object"},
     //{"field_get_object", testmod_field_get_object, METH_VARARGS, "Function field_get_object"},
@@ -79,23 +81,23 @@ PyMODINIT_FUNC PyInit_testmod(void)
         return NULL;
     if (PyType_Ready(&InstructionSequence_Repr_Type) < 0)
         return NULL;
-    if (PyType_Ready(&Field_Type) < 0)
-        return NULL;
     if (PyType_Ready(&UnitVarStruct_Repr_Type) < 0)
+        return NULL;
+    if (PyType_Ready(&Animal_Repr_Type) < 0)
         return NULL;
 
     
     Py_INCREF(&DemoRec_Type);
     Py_INCREF(&VCPU_Repr_Type);
     Py_INCREF(&InstructionSequence_Repr_Type);
-    Py_INCREF(&Field_Type);
     Py_INCREF(&UnitVarStruct_Repr_Type);
+    Py_INCREF(&Animal_Repr_Type);
     
     PyModule_AddObject(mod, "DemoRec", (PyObject *) &DemoRec_Type);
-    PyModule_AddObject(mod, "VCPU_Repr", (PyObject *) &VCPU_Repr_Type);
+    PyModule_AddObject(mod, "VCPU", (PyObject *) &VCPU_Repr_Type);
     PyModule_AddObject(mod, "InstructionSequence", (PyObject *) &InstructionSequence_Repr_Type);
-    PyModule_AddObject(mod, "Field", (PyObject *) &Field_Type);
     PyModule_AddObject(mod, "UnitVarStruct", (PyObject *) &UnitVarStruct_Repr_Type);
+    PyModule_AddObject(mod, "Animal", (PyObject *) &Animal_Repr_Type);
     
     return mod;
 }

@@ -162,6 +162,8 @@ PyObject * testmod_func_animal_get_instruction_seq(PyObject * self, PyObject *ar
     InstructionSequence * sequence_dest = &sequence_r->sequence;
     InstructionSequence * sequence_src = &animal->sequences[idx];
     memcpy(sequence_dest, sequence_src, sizeof(InstructionSequence));
+    
+    Py_RETURN_NONE;
 }
 
 PyObject * testmod_func_animal_set_instruction_seq(PyObject * self, PyObject *args)
@@ -181,6 +183,7 @@ PyObject * testmod_func_animal_set_instruction_seq(PyObject * self, PyObject *ar
     InstructionSequence * sequence_dest = &animal->sequences[idx];
     
     memcpy(sequence_dest, sequence_src, sizeof(InstructionSequence));
+    Py_RETURN_NONE;
 }
 
 
@@ -215,3 +218,43 @@ PyObject * testmod_vcpu_run(PyObject *self, PyObject *args)
     return Py_BuildValue("i", res);
 }
 
+PyObject * testmod_vcpu_reset(PyObject *self, PyObject *args) 
+{
+    VCPU_Repr * vcpu_repr = NULL;
+
+    if (! PyArg_ParseTuple(args, "O", &vcpu_repr))
+        Py_RETURN_NONE;
+    
+    
+    vcpu_reset(&vcpu_repr->vcpu);
+    
+    Py_RETURN_NONE;
+}
+
+PyObject * testmod_vcpu_get_state(PyObject *self, PyObject *args) 
+{
+    VCPU_Repr * vcpu_repr = NULL;
+    
+     
+    int id;
+    int energy;
+    int x;
+    int y;
+    int direction;
+    int maxsteps = 1;
+    
+
+    if (! PyArg_ParseTuple(args, "O", &vcpu_repr))
+        Py_RETURN_NONE;
+        
+    VCPU * vcpu = &vcpu_repr->vcpu;
+    char buf[2000];
+    char f[1000] = "VCPU id:%d ip:%d acc:%d r0:%d r1:%d r2:%d r3:%d r4:%d r5:%d r6:%d r7:%d r8:%d r9:%d r10:%d r11:%d r12:%d r13:%d r14:%d r15:%d flags:%x stop_flag:%d";
+    snprintf(buf, sizeof(buf), f, vcpu->id, vcpu->ip, vcpu->accumulator, vcpu->registers[0], vcpu->registers[1], vcpu->registers[2], vcpu->registers[3],
+        vcpu->registers[4], vcpu->registers[5], vcpu->registers[6], vcpu->registers[7],
+        vcpu->registers[8], vcpu->registers[9], vcpu->registers[10], vcpu->registers[11],
+        vcpu->registers[12], vcpu->registers[13], vcpu->registers[14], vcpu->registers[15],
+        vcpu->flags, vcpu->stop_flag);
+    
+    return Py_BuildValue("s", buf);
+}
