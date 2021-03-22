@@ -10,20 +10,7 @@
 #include <structmember.h>
 
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-extern PyTypeObject UnitVarStruct_Type;
-
-#ifdef	__cplusplus
-}
-#endif
-
-typedef struct UnitVarStruct_s UnitVarStruct;
-
-struct UnitVarStruct_s {
-    PyObject_HEAD // Макрос объявления нового типа, объекта фиксированного размера
+typedef struct {
     int id;
     int energy;
     int action;
@@ -32,6 +19,6 @@ struct UnitVarStruct_s {
     int x;
     int y;
     int direction;
-};
+} UnitVarStruct;
 
 #endif

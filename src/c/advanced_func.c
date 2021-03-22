@@ -2,116 +2,31 @@
 #include <Python.h>
 #include "demorec.h"
 #include "vcpu.h"
+#include "vcpu_repr.h"
 #include "field.h"
 #include "unitvarstruct.h"
+#include "unitvarstruct_repr.h"
 #include "instructionsequence.h"
-
-#include "cpu.h"
-
-
-//==========================================================================
+#include "instructionsequence_repr.h"
 
 
-PyObject * testmod_func_ret_struct(PyObject *self, PyObject *args) 
+PyObject * testmod_func_get_instruction_count(PyObject *self, PyObject *args) 
 {
-    DemoRec *st;
+    InstructionSequence_Repr * sequence_r;
+    int ct;
     
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "O", &st)) // O - объект данных
-        Py_RETURN_NONE;
-    
-    printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-
-    return Py_BuildValue("O", st);
-}
-
-
-
-PyObject * testmod_func_set_element(PyObject *self, PyObject *args) 
-{
-    DemoRec *st;
-    int idx;
-    int val;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oii", &st, &idx, &val)) // O - объект данных
-        Py_RETURN_NONE;
-    
-    st->data[idx] = val;
-    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-    Py_RETURN_NONE;
-}
-
-
-
-PyObject * testmod_func_get_element(PyObject *self, PyObject *args) 
-{
-    DemoRec *st;
-    int idx;
-    int val;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oi", &st, &idx)) // O - объект данных
-        Py_RETURN_NONE;
-    
-    val = st->data[idx];
-    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-    return Py_BuildValue("i", val);
-}
-
-
-
-//==========================================================================
-
-
-
-
-
-
-
-
-
-PyObject * testmod_func_set_register(PyObject *self, PyObject *args) 
-{
-    VCPU *st;
-    int idx;
-    int val;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oii", &st, &idx, &val)) // O - объект данных
+    if (!PyArg_ParseTuple(args, "O", &sequence_r))
         Py_RETURN_NONE;
         
-    if ((idx < 0) || (idx > 15))
-        Py_RETURN_NONE;
-    
-    st->registers[idx] = val & 0xFF;
-    
-    Py_RETURN_NONE;
-}
-
-PyObject * testmod_func_get_register(PyObject *self, PyObject *args) 
-{
-    VCPU *st;
-    int idx;
-    int val;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oi", &st, &idx)) // O - объект данных
-        Py_RETURN_NONE;
+    ct = sequence_r->sequence.count;
         
-    if ((idx < 0) || (idx > 15))
-        Py_RETURN_NONE;
-    
-    val = st->registers[idx];
-    
-    return Py_BuildValue("i", val);
+    return Py_BuildValue("i", ct);
 }
 
 
-
-PyObject * testmod_func_set_instruction(PyObject *self, PyObject *args) 
+PyObject * testmod_func_get_instruction(PyObject *self, PyObject *args) 
 {
-    InstructionSequence * sequence;
+    InstructionSequence_Repr * sequence_r;
     int idx;
     int cmd;
     int reg_dest;
@@ -122,8 +37,49 @@ PyObject * testmod_func_set_instruction(PyObject *self, PyObject *args)
     int flags_target;
     
     // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oiiiiiiii", &sequence, &idx, &cmd, &reg_dest, &reg_src, &imm, &flags_allow, &flags_deny, &flags_target)) // O - объект данных
+    if (!PyArg_ParseTuple(args, "Oi", &sequence_r, &idx))
         Py_RETURN_NONE;
+        
+    if ((idx < 0) || (idx >= sequence_r->sequence.count))
+        Py_RETURN_NONE;
+    
+    cmd = sequence_r->sequence.instructions[idx].cmd;
+    reg_dest = sequence_r->sequence.instructions[idx].reg_dest;
+    reg_src = sequence_r->sequence.instructions[idx].reg_src;
+    imm = sequence_r->sequence.instructions[idx].imm;
+    
+    flags_allow = sequence_r->sequence.instructions[idx].flags_allow;
+    flags_deny = sequence_r->sequence.instructions[idx].flags_deny;
+    flags_target = sequence_r->sequence.instructions[idx].flags_target;
+    
+    return Py_BuildValue("iiiiiii", cmd, reg_dest, reg_src, imm, flags_allow, flags_deny, flags_target);
+}
+
+
+PyObject * testmod_func_set_instruction(PyObject *self, PyObject *args)
+{
+    InstructionSequence_Repr * sequence_r;
+    int idx;
+    int cmd;
+    int reg_dest;
+    int reg_src;
+    int imm;
+    int flags_allow;
+    int flags_deny;
+    int flags_target;
+    
+    memset(&reg_dest, 0, sizeof(reg_dest));
+    memset(&reg_src, 0, sizeof(reg_src));
+    memset(&imm, 0, sizeof(imm));
+    memset(&flags_allow, 0, sizeof(flags_allow));
+    memset(&flags_deny, 0, sizeof(flags_deny));
+    memset(&flags_target, 0, sizeof(flags_target));
+    
+    // Получаем структуру из Python
+    if (!PyArg_ParseTuple(args, "Oiiiiiiii", &sequence_r, &idx, &cmd, &reg_dest, &reg_src, &imm, &flags_allow, &flags_deny, &flags_target)) // O - объект данных
+        Py_RETURN_NONE;
+        
+    InstructionSequence * sequence = &sequence_r->sequence;
         
     if ((idx < 0) || (idx >= sequence->count))
         Py_RETURN_NONE;
@@ -140,11 +96,9 @@ PyObject * testmod_func_set_instruction(PyObject *self, PyObject *args)
     Py_RETURN_NONE;
 }
 
-
-
-PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args) 
+PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args)
 {
-    InstructionSequence * sequence;
+    InstructionSequence_Repr * sequence_r;
     int idx;
     int cmd;
     int reg_dest;
@@ -154,14 +108,25 @@ PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args)
     int flags_deny;
     int flags_target;
     
+    memset(&reg_dest, 0, sizeof(reg_dest));
+    memset(&reg_src, 0, sizeof(reg_src));
+    memset(&imm, 0, sizeof(imm));
+    memset(&flags_allow, 0, sizeof(flags_allow));
+    memset(&flags_deny, 0, sizeof(flags_deny));
+    memset(&flags_target, 0, sizeof(flags_target));
+    
+    static char *kwlist[] = {"sequence", "cmd", "reg_dest", "reg_src", "flags_allow", "flags_deny", "flags_target", NULL};
+    
     // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oiiiiiii", &sequence, &cmd, &reg_dest, &reg_src, &imm, &flags_allow, &flags_deny, &flags_target)) // O - объект данных
+    if (!PyArg_ParseTuple(args, "Oiiiiiii", &sequence_r, &cmd, &reg_dest, &reg_src, &imm, &flags_allow, &flags_deny, &flags_target))
         Py_RETURN_NONE;
         
-    if (sequence->count >= MaxInstructions)
-        Py_RETURN_NONE;
-    
+    InstructionSequence * sequence = &sequence_r->sequence;
+        
     idx = sequence->count;
+    
+    if (idx >= 256)
+        Py_RETURN_NONE;
     
     sequence->instructions[idx].cmd = cmd;
     sequence->instructions[idx].reg_dest = reg_dest;
@@ -172,139 +137,40 @@ PyObject * testmod_func_add_instruction(PyObject *self, PyObject *args)
     sequence->instructions[idx].flags_deny = flags_deny;
     sequence->instructions[idx].flags_target = flags_target;
     
-    sequence->count++;
+    sequence->count += 1;
     
     Py_RETURN_NONE;
 }
 
 
 
-PyObject * testmod_vcpu_step(PyObject *self, PyObject *args) 
+
+
+PyObject * testmod_vcpu_run(PyObject *self, PyObject *args) 
 {
-    VCPU * vcpu;
-    InstructionSequence * sequence;
-    Field * field;
-    UnitVarStruct * u;
-    int maxsteps;
+    VCPU_Repr * vcpu_repr = NULL;
+    InstructionSequence_Repr * sequence_repr = NULL;
+    UnitVarStruct_Repr * u_repr = NULL;
     
-    if (!PyArg_ParseTuple(args, "OOOOi", &vcpu, &sequence, &field, &u, &maxsteps)) // O - объект данных
+    static char *kwlist[] = {"vcpu", "instructionsequence", "unitvarstruct", NULL};
+    
+    int id;
+    int energy;
+    int x;
+    int y;
+    int direction;
+    int maxsteps = 1;
+    
+
+    if (! PyArg_ParseTuple(args, "OOOi", &vcpu_repr, &sequence_repr, &u_repr, &maxsteps))
         Py_RETURN_NONE;
-        
-    int res = vcpu_step(vcpu, sequence, field, u, maxsteps);
+    
+    
+    VCPU * vcpu = &vcpu_repr->vcpu;
+    InstructionSequence * sequence = &sequence_repr->sequence;
+    UnitVarStruct * u = &u_repr->unitvarstruct;
+    int res = vcpu_run(vcpu, sequence, u, false, maxsteps);
     
     return Py_BuildValue("i", res);
 }
 
-PyObject * testmod_vcpu_set_callback(PyObject *self, PyObject *args)
-{
-    PyObject * temp_f;
-    PyObject * temp_cb;
-    VCPU * vcpu;
-    int res;
-    
-    if (!PyArg_ParseTuple(args, "OOO", &vcpu, &temp_f, &temp_cb))
-        Py_RETURN_NONE;
-    
-    res = VCPU_init_callback(vcpu, temp_f, temp_cb);
-    
-    return Py_BuildValue("i", res);
-}
-
-
-
-// ===================================================================================
-
-PyObject * testmod_field_set_object(PyObject *self, PyObject *args) 
-{
-    Field * field;
-    void * obj;
-    int obj_t;
-    int x;
-    int y;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "OiiOi", &field, &x, &y, &obj, &obj_t)) // O - объект данных
-        Py_RETURN_NONE;
-    
-    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
-    {
-        int offset = y * field->width + x;
-        field->cells[offset].obj = obj;
-        field->cells[offset].type = obj_t;
-    }
-    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-    Py_RETURN_NONE;
-}
-
-
-PyObject * testmod_field_get_object(PyObject *self, PyObject *args) 
-{
-    Field * field;
-    void * obj;
-    int obj_t;
-    int x;
-    int y;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oii", &field, &x, &y)) // O - объект данных
-        Py_RETURN_NONE;
-    
-    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
-    {
-        int offset = y * field->width + x;
-        obj = field->cells[offset].obj;
-        if (obj == NULL)
-            Py_RETURN_NONE;
-        
-        return Py_BuildValue("O", obj);
-        
-    }
-    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-    Py_RETURN_NONE;
-}
-
-
-PyObject * testmod_field_get_object_type(PyObject *self, PyObject *args) 
-{
-    Field * field;
-    void * obj;
-    int obj_t;
-    int x;
-    int y;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oii", &field, &x, &y)) // O - объект данных
-        Py_RETURN_NONE;
-    
-    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
-    {
-        int offset = y * field->width + x;
-        obj_t = field->cells[offset].type;
-
-        return Py_BuildValue("i", obj_t);
-    }
-    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-    Py_RETURN_NONE;
-}
-
-PyObject * testmod_field_get_object_subtype(PyObject *self, PyObject *args) 
-{
-    Field * field;
-    int obj_st;
-    int x;
-    int y;
-    
-    // Получаем структуру из Python
-    if (!PyArg_ParseTuple(args, "Oii", &field, &x, &y)) // O - объект данных
-        Py_RETURN_NONE;
-    
-    if ((x >= 0) && (x < field->width) && (y >= 0) && (y < field->height))
-    {
-        int offset = y * field->width + x;
-        obj_st = field->cells[offset].subtype;
-
-        return Py_BuildValue("i", obj_st);
-    }
-    //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-    Py_RETURN_NONE;
-}

@@ -1,37 +1,20 @@
 #ifndef _ANIMAL_H_
 #define _ANIMAL_H_
 
-#include <Python.h>
-    
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
-#include <structmember.h>
-
+#include <stdbool.h>
 #include "vcpu.h"
 #include "instructionsequence.h"
 #include "unitvarstruct.h"
 
-
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-extern PyTypeObject Animal_Type;
-
-#ifdef	__cplusplus
-}
-#endif
-
-//typedef struct Animal_s Animal;
-
 typedef struct {
-    PyObject_HEAD // Макрос объявления нового типа, объекта фиксированного размера
-    int thread_count;
-    VCPU * vcpus[16];
-    InstructionSequence * sequences[16];
-    UnitVarStruct * v;
+    int id;
+    int next_thread;
+    VCPU vcpus[16];
+    InstructionSequence sequences[16];
+    UnitVarStruct unitvarstruct;
 } Animal;
+
+void animal_init(Animal * animal);
+void animal_step(Animal * animal, bool stop_on_action, bool one_thread_per_tick, int maxsteps);
 
 #endif
