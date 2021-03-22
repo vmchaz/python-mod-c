@@ -1,5 +1,5 @@
-#ifndef _UNITVARSTRUCT_H_
-#define _UNITVARSTRUCT_H_
+#ifndef _ANIMAL_H_
+#define _ANIMAL_H_
 
 #include <Python.h>
     
@@ -9,29 +9,29 @@
 
 #include <structmember.h>
 
+#include "vcpu.h"
+#include "instructionsequence.h"
+#include "unitvarstruct.h"
+
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
-extern PyTypeObject UnitVarStruct_Type;
+extern PyTypeObject Animal_Type;
 
 #ifdef	__cplusplus
 }
 #endif
 
-typedef struct UnitVarStruct_s UnitVarStruct;
+//typedef struct Animal_s Animal;
 
-struct UnitVarStruct_s {
+typedef struct {
     PyObject_HEAD // Макрос объявления нового типа, объекта фиксированного размера
-    int id;
-    int energy;
-    int action;
-    int action_p;
-    int use_action_p;
-    int x;
-    int y;
-    int direction;
-};
+    int thread_count;
+    VCPU * vcpus[16];
+    InstructionSequence * sequences[16];
+    UnitVarStruct * v;
+} Animal;
 
 #endif

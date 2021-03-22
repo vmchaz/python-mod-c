@@ -20,9 +20,7 @@ extern PyTypeObject VCPU_Type;
 }
 #endif
 
-typedef struct VCPU_s VCPU;
-
-struct VCPU_s {
+typedef struct {
     PyObject_HEAD // Макрос объявления нового типа, объекта фиксированного размера
     int id;
     int ip;
@@ -32,6 +30,12 @@ struct VCPU_s {
     int error_flag;
     int ip_mod_flag;
     int registers[16];
-};
+    
+    PyObject * field;
+    PyObject * callback;
+} VCPU;
+
+int VCPU_deinit_callback(VCPU * self);
+int VCPU_init_callback(VCPU * self, PyObject * f, PyObject * cb);
 
 #endif

@@ -20,22 +20,23 @@
 
 // Список функций модуля
 static PyMethodDef methods[] = {
-    {"func_hello", testmod_func_hello, METH_NOARGS, "func_hello"}, // Функция без аргументов
-    {"func_ret_int", testmod_func_ret_int, METH_VARARGS, "func_ret_int"}, // Функция с аргументами
-    {"func_ret_double", testmod_func_ret_double, METH_VARARGS, "func_ret_double"},
-    {"func_ret_str", testmod_func_ret_str, METH_VARARGS, "func_ret_str"},
-    {"func_many_args", testmod_func_many_args, METH_VARARGS, "func_many_args"},
-    {"func_ret_struct", testmod_func_ret_struct, METH_VARARGS, "func_ret_struct"},
-    {"func_get_element", testmod_func_get_element, METH_VARARGS, "func_get_element"},
-    {"func_set_element", testmod_func_set_element, METH_VARARGS, "func_set_element"},
-    {"get_register", testmod_func_get_register, METH_VARARGS, "get_register"},
-    {"set_register", testmod_func_set_register, METH_VARARGS, "set_register"},
-    {"set_instruction", testmod_func_set_instruction, METH_VARARGS, "set_instruction"},
-    {"add_instruction", testmod_func_add_instruction, METH_VARARGS, "add_instruction"},    
-    {"vcpu_step", testmod_vcpu_step, METH_VARARGS, "vcpu_step"},
-    {"field_set_object", testmod_field_set_object, METH_VARARGS, "field_set_object"},
-    {"field_get_object", testmod_field_get_object, METH_VARARGS, "field_get_object"},
-    {"field_get_object_type", testmod_field_get_object_type, METH_VARARGS, "field_get_object_type"},                    
+    {"func_hello", testmod_func_hello, METH_NOARGS, "Test function func_hello"}, // Функция без аргументов
+    {"func_ret_int", testmod_func_ret_int, METH_VARARGS, "Test function func_ret_int"}, // Функция с аргументами
+    {"func_ret_double", testmod_func_ret_double, METH_VARARGS, "Test function func_ret_double"},
+    {"func_ret_str", testmod_func_ret_str, METH_VARARGS, "Test function func_ret_str"},
+    {"func_many_args", testmod_func_many_args, METH_VARARGS, "Test function func_many_args"},
+    {"func_ret_struct", testmod_func_ret_struct, METH_VARARGS, "Test function func_ret_struct"},
+    {"func_get_element", testmod_func_get_element, METH_VARARGS, "Function func_get_element"},
+    {"func_set_element", testmod_func_set_element, METH_VARARGS, "Function func_set_element"},
+    {"get_register", testmod_func_get_register, METH_VARARGS, "Function get_register"},
+    {"set_register", testmod_func_set_register, METH_VARARGS, "Function set_register"},
+    {"set_instruction", testmod_func_set_instruction, METH_VARARGS, "Function set_instruction"},
+    {"add_instruction", testmod_func_add_instruction, METH_VARARGS, "Function add_instruction"},    
+    {"vcpu_step", testmod_vcpu_step, METH_VARARGS, "Function vcpu_step"},
+    {"vcpu_set_callback", testmod_vcpu_set_callback, METH_VARARGS, "Function vcpu_set_callback"},
+    {"field_set_object", testmod_field_set_object, METH_VARARGS, "Function field_set_object"},
+    {"field_get_object", testmod_field_get_object, METH_VARARGS, "Function field_get_object"},
+    {"field_get_object_type", testmod_field_get_object_type, METH_VARARGS, "Function field_get_object_type"},                    
     
     {NULL, NULL, 0, NULL}
 };

@@ -56,7 +56,7 @@ PyObject * testmod_func_get_element(PyObject *self, PyObject *args)
     
     val = st->data[idx];
     //printf("C get test_st: val1 - %d, val2 - %f, val3 - %d\n", st->val1++, st->val2++, st->val3++);
-    Py_BuildValue("i", val);
+    return Py_BuildValue("i", val);
 }
 
 
@@ -104,7 +104,7 @@ PyObject * testmod_func_get_register(PyObject *self, PyObject *args)
     
     val = st->registers[idx];
     
-    Py_BuildValue("i", val);
+    return Py_BuildValue("i", val);
 }
 
 
@@ -192,7 +192,22 @@ PyObject * testmod_vcpu_step(PyObject *self, PyObject *args)
         
     int res = vcpu_step(vcpu, sequence, field, u, maxsteps);
     
-    Py_BuildValue("i", res);
+    return Py_BuildValue("i", res);
+}
+
+PyObject * testmod_vcpu_set_callback(PyObject *self, PyObject *args)
+{
+    PyObject * temp_f;
+    PyObject * temp_cb;
+    VCPU * vcpu;
+    int res;
+    
+    if (!PyArg_ParseTuple(args, "OOO", &vcpu, &temp_f, &temp_cb))
+        Py_RETURN_NONE;
+    
+    res = VCPU_init_callback(vcpu, temp_f, temp_cb);
+    
+    return Py_BuildValue("i", res);
 }
 
 

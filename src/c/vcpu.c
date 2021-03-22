@@ -16,6 +16,9 @@ static PyObject * VCPU_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         self->flags = 0;        
         self->stop_flag = 0;
         self->error_flag = 0;
+        
+        self->field = NULL;
+        self->callback = NULL;
         memset(&self->ip_mod_flag, 0, sizeof(self->ip_mod_flag));
         
         for(int i=0; i<16; i++)
@@ -29,7 +32,58 @@ static PyObject * VCPU_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 // Освобождение структуры
 static void VCPU_dealloc(VCPU * self) 
 {
+    VCPU_deinit_callback(self);
     Py_TYPE(self)->tp_free((PyObject*)self);
+}
+
+int VCPU_init_callback(VCPU * vcpu, PyObject * f, PyObject * cb)
+{
+    if (!PyCallable_Check(cb))
+    {
+        PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+        return -1;
+    }
+    
+    if (vcpu->field != NULL)
+    {
+        Py_XDECREF(vcpu->field);
+        vcpu->field = NULL;
+    }
+    
+    if (vcpu->callback != NULL)
+    {
+        Py_XDECREF(vcpu->callback);
+        vcpu->callback = NULL;
+    }
+
+
+    Py_XINCREF(f);
+    Py_XINCREF(cb);
+            
+    vcpu->field = f;
+    vcpu->callback = cb;
+        
+    return 0;
+}
+
+int vcpu_set_callback(PyObject * args)
+{
+
+}
+
+int VCPU_deinit_callback(VCPU * self)
+{
+    if (self->field != NULL)
+    {
+        Py_XDECREF(self->field);
+        self->field = NULL;
+    }
+    
+    if (self->callback != NULL)
+    {
+        Py_XDECREF(self->callback);
+        self->callback = NULL;
+    }
 }
 
 
